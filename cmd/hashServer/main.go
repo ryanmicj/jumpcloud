@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"strconv"
 	"strings"
 	"sync"
 )
@@ -12,8 +13,23 @@ func main() {
 
 	shutdownChannel := make(chan string)
 
-	fmt.Println("Using port " + os.Args[1])
-	go listen(os.Args[1], shutdownChannel, &wg)
+	listenPort := 8080
+
+	//Check to see if a port was supplied on the command line, and that it is numeric
+	var listenPortString string
+	if len(os.Args) > 1 {
+		listenPortString = os.Args[1]
+		if len(listenPortString) > 0 {
+			portArg, err := strconv.Atoi(listenPortString)
+			if err == nil {
+				listenPort = portArg
+			}
+		}
+	}
+	listenPortString = strconv.Itoa(listenPort)
+
+	fmt.Println("Using port " + listenPortString)
+	go listen(listenPortString, shutdownChannel, &wg)
 
 	//Wait for the shutdown message, then exit
 	for msg := range shutdownChannel {
