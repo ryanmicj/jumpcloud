@@ -15,5 +15,5 @@ There are several improvements I would make if I knew Go a bit better:
 handling of this is admittedly a bit simplistic, but it was not the main focus of my effort.
 2. Improved managing of shared data.  A better knowledge of Go's conucrrency mechanisms would probably allow for a cleaner or more efficient implementation.
 
-
+Build the Dockerfile from the root direcotry of the project - NOT the /build directory: "docker build -f build/Dockerfile ."  The image will export post 8080 in the container.  This can be mapped to any port on the host.
 
