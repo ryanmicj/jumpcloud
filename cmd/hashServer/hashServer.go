@@ -109,8 +109,12 @@ func listen(port string, shutdownChannel chan string, wg *sync.WaitGroup) {
 	}
 
 	shutdownHandler := func(w http.ResponseWriter, req *http.Request) {
-		shutdownChannel <- "shutdown"
-		close(shutdownChannel)
+		if checkMethodType(req, "POST") == true {
+			shutdownChannel <- "shutdown"
+			close(shutdownChannel)
+		} else {
+			writeInvalidMethodError(w, req.Method)
+		}
 	}
 
 	http.HandleFunc("/hash/", fetchHashHandler)    // Handle GET requests: GET /hash/{hashId}
